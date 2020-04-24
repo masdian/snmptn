@@ -10,8 +10,8 @@ output:
 ```{r setup, include=FALSE}
 library(flexdashboard)
 
-library(flipTime)
-UpdateEvery(1, "hours", options = "wakeup")
+#library(flipTime)
+#UpdateEvery(1, "hours", options = "wakeup")
 
 #library(readxl)
 db <- read.csv("https://github.com/registrasi-untirta/snmptn/raw/master/snmptn.csv")
