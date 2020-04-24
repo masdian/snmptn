@@ -306,3 +306,16 @@ kable(data, row.names = F) %>%
 
 
 ```
+
+Camaba Sudah Registrasi
+===
+
+### Berikut adalah daftar nama calon mahasiswa baru Universitas Sultan Ageng Tirtayasa yang sudah selesai melakukan registrasi di admisi.untirta.ac.id (**gunakan Search untuk pencarian cepat**)
+
+```{r}
+data <- db %>%
+  filter(registrasi == "registrasi") %>%
+  select(no_pend, nama, jk, prodi)
+names(data) <- c("No Pendaftaran", "Nama", "Jenis Kelamin", "Program Studi")
+DT::datatable(data)
+  
