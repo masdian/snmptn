@@ -317,5 +317,7 @@ data <- db %>%
   filter(registrasi == "registrasi") %>%
   select(no_pend, nama, jk, prodi)
 names(data) <- c("No Pendaftaran", "Nama", "Jenis Kelamin", "Program Studi")
-DT::datatable(data)
+DT::datatable(data,
+              rownames = F)#,
+              #filter = "top")
   
