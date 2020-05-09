@@ -107,7 +107,7 @@ Row
 sudah <- nrow(filter(db, registrasi == "registrasi"))
 valueBox(
   value = paste(format(sudah, big.mark = " "), "", sep = " "),
-  caption = "Sudah Registrasi",
+  caption = "Registrasi",
   icon = "fas fa-thumbs-up",
   color = "green"
 )
@@ -118,7 +118,7 @@ valueBox(
 ```{r}
 valueBox(
   value = paste(format(nrow(db)-sudah, big.mark = " "), "", sep = " "),
-  caption = "belum Registrasi",
+  caption = "Tidak Registrasi",
   icon = "fas fa-file-upload",
   color = "brown"
 )
@@ -241,14 +241,16 @@ data <- db %>%
   summarize(pendaftar = max(peminat),
             lulus = n(),
             sudah = sum(registrasi == "registrasi"),
-            belum = lulus - sudah)
+            belum = lulus - sudah,
+            diterima = sum(nim == "diterima"))
 
 data <- data %>%
   group_by(fakultas) %>%
   summarize(pendaftar = sum(pendaftar),
             lulus = sum(lulus),
             sudah = sum(sudah),
-            belum = sum(belum))
+            belum = sum(belum),
+            diterima = sum(diterima))
 
 data$fakultas <- c("Hukum", "FKIP", "Teknik", "Pertanian",
                    "FEB", "FISIP", "Kedokteran")
@@ -256,6 +258,7 @@ data$fakultas  <- factor(data$fakultas, levels = data[["fakultas"]])
 
 plot_ly(data, x = ~fakultas, y = ~lulus, type = "bar", name = "Total") %>%
   add_trace(y = ~sudah, name = "registrasi") %>%
+  add_trace(y = ~diterima, name = "diterima") %>%
   layout(
     title = "",
     yaxis = list(title = ""),
@@ -267,12 +270,12 @@ plot_ly(data, x = ~fakultas, y = ~lulus, type = "bar", name = "Total") %>%
 ### **Progres registrasi di setiap fakultas**
 
 ```{r}
-names(data) <- c("Fakultas", "Pendaftar", "Lulus", "Sudah", "Belum")
+names(data) <- c("Fakultas", "Pendaftar", "Lulus", "Ya", "Tidak", "Diterima")
 data <- adorn_totals(data, where = "row", name = "Total")
 kable(data) %>%
   kable_styling(bootstrap_options = "striped", full_width = F,
                 latex_options = "scale_down") %>%
-  add_header_above(c(" " = 3, "Registrasi" = 2))
+  add_header_above(c(" " = 3, "Registrasi" = 2, " " = 1))
 
 ```
 
@@ -287,15 +290,16 @@ data <- db %>%
   summarize(pendaftar = max(peminat),
             lulus = n(),
             sudah = sum(registrasi == "registrasi"),
-            belum = lulus - sudah)
+            belum = lulus - sudah,
+            diterima = sum(nim == "diterima"))
 data <- data[, -1]
-names(data) <- c("Fakultas/Program Studi", "Pendaftar", "Lulus", "Sudah", "Belum")
+names(data) <- c("Fakultas/Program Studi", "Pendaftar", "Lulus", "Ya", "Tidak", "Diterima")
 data <- adorn_totals(data,where = "row", name = "Total")
 
 kable(data, row.names = F) %>%
   kable_styling(bootstrap_options = "striped", full_width = F,
                 latex_options = "scale_down") %>%
-  add_header_above(c(" " = 3, "Registrasi" = 2)) %>%
+  add_header_above(c(" " = 3, "Registrasi" = 2, " " = 1)) %>%
   pack_rows("Hukum", 1, 1, label_row_css = "background-color: #666; color: #fff;") %>%
   pack_rows("Keguruan dan Ilmu Pendidikan", 2, 19, label_row_css = "background-color: #666; color: #fff;") %>%
   pack_rows("Teknik", 20, 25, label_row_css = "background-color: #666; color: #fff;") %>%
@@ -307,10 +311,10 @@ kable(data, row.names = F) %>%
 
 ```
 
-Camaba Sudah Registrasi
+Camaba Registrasi
 ===
 
-### Berikut adalah daftar nama calon mahasiswa baru Universitas Sultan Ageng Tirtayasa yang sudah selesai melakukan registrasi di admisi.untirta.ac.id sampai dengan akhir periode registrasi (**gunakan Search untuk pencarian cepat**)
+### Berikut adalah daftar nama calon mahasiswa baru Universitas Sultan Ageng Tirtayasa yang melakukan registrasi di admisi.untirta.ac.id  (**gunakan Search untuk pencarian cepat**)
 
 ```{r}
 # `r format(Sys.time(), "%d %B %Y")` pukul `r format(Sys.time(), "%X")`
@@ -322,4 +326,21 @@ names(data) <- c("No Pendaftaran", "Nama", "Jenis Kelamin", "Program Studi")
 DT::datatable(data,
               rownames = F)#,
               #filter = "top")
-  
+```
+
+Mahasiswa Baru
+===
+
+### Berikut adalah daftar nama mahasiswa baru Universitas Sultan Ageng Tirtayasa jalur SNMPTN 2020 sampai dengan `r format(Sys.time(), "%d %B %Y")` pukul `r format(Sys.time(), "%X")`. (**gunakan Search untuk pencarian cepat**)
+
+```{r}
+# `r format(Sys.time(), "%d %B %Y")` pukul `r format(Sys.time(), "%X")`
+# format waktu
+data <- db %>%
+  filter(nim == "diterima") %>%
+  select(no_pend, nama, jk, prodi)
+names(data) <- c("No Pendaftaran", "Nama", "Jenis Kelamin", "Program Studi")
+DT::datatable(data,
+              rownames = F)#,
+              #filter = "top")
+```
