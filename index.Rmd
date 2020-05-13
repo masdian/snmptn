@@ -14,9 +14,9 @@ Sys.setlocale("LC_TIME", "IND")
 #UpdateEvery(1, "hours", options = "wakeup")
 
 #library(readxl)
-db <- read.csv("https://github.com/registrasi-untirta/snmptn/raw/master/snmptn.csv")
+#db <- read.csv("https://github.com/registrasi-untirta/snmptn/raw/master/snmptn.csv")
 
-#db <- read.csv("snmptn.csv")
+db <- read.csv("G:/My Drive/#PMB/2020/01_SNMPTN/Dashboard/snmptn.csv")
 
 library(tidyverse)
 
